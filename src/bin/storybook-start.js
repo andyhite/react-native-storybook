@@ -9,10 +9,12 @@ program
   .option('-h, --host <host>', 'host to listen on')
   .option('-p, --port <port>', 'port to listen on')
   .option('-c, --config-dir [dir-name]', 'storybook config directory')
+  .option('-r, --react-native-dir [dir-name]', 'react native directory')
   .parse(process.argv);
 
 const projectDir = path.resolve();
 const configDir = path.resolve(program.configDir || './storybook');
+const reactNativeDir = path.resolve(program.reactNativeDir || 'node_modules/react-native');
 const listenAddr = [program.port];
 if (program.host) {
   listenAddr.push(program.host);
@@ -29,7 +31,7 @@ server.listen(...listenAddr, function (err) {
 
 // RN packager
 shelljs.exec([
-  'node node_modules/react-native/local-cli/cli.js start',
+  `node ${reactNativeDir}/local-cli/cli.js start`,
   `--projectRoots ${configDir}`,
   `--root ${projectDir}`,
 ].join(' '), {async: true});
